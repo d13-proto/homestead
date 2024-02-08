@@ -8,16 +8,62 @@
 # to apply, you may also create user-customizations.sh,
 # which will be run after this script.
 
+# Git
+sudo add-apt-repository ppa:git-core/ppa -y
+sudo apt update
+sudo apt install git -y
 
-# If you're not quite ready for the latest Node.js version,
-# uncomment these lines to roll back to a previous version
+git config --global init.defaultbranch main
+git config --global core.autocrlf input
 
-# Remove current Node.js version:
-#sudo apt-get -y purge nodejs
-#sudo rm -rf /usr/lib/node_modules/npm/lib
-#sudo rm -rf //etc/apt/sources.list.d/nodesource.list
+# FNM
+if ! hash fnm 2>/dev/null; then
+    sudo apt install -y curl unzip
 
-# Install Node.js Version desired (i.e. v13)
-# More info: https://github.com/nodesource/distributions/blob/master/README.md#debinstall
-#curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
-#sudo apt-get install -y nodejs
+    curl -Lf https://mirror.ghproxy.com/https://raw.githubusercontent.com/Schniz/fnm/master/.ci/install.sh \
+    | sed 's|https://github.com|https://mirror.ghproxy.com/&|' \
+    | bash
+
+    export PATH="$HOME/.local/share/fnm:$PATH"
+    eval "$(fnm env)"
+
+    export FNM_NODE_DIST_MIRROR=https://mirrors.aliyun.com/nodejs-release/
+    fnm install --lts
+
+    # npm mirror
+    npm config set registry https://registry.npmmirror.com/
+fi
+
+# PNPM
+if ! hash pnpm 2>/dev/null; then
+    npm install -g pnpm
+    pnpm setup
+fi
+
+# Composer completion
+composer completion | sudo tee /etc/bash_completion.d/composer > /dev/null
+
+# Composer mirror
+composer config -g repo.pkg_xyz composer https://packagist.phpcomposer.com
+composer config -g repos.tencent composer https://mirrors.tencent.com/composer/
+composer config -g repo.packagist false
+
+# Proxychains
+sudo apt install -y proxychains4
+mkdir -p ~/.proxychains
+tee ~/.proxychains/proxychains.conf <<EOF
+strict_chain
+quiet_mode
+remote_dns_subnet 224
+tcp_read_time_out 15000
+tcp_connect_time_out 8000
+
+[ProxyList]
+
+# Vagrant
+#socks5 192.168.56.1 7890
+
+# WSL
+#socks5 172.29.32.1 7890
+EOF
+# 需要防火墙开放 7890 端口入站 TCP 连接
