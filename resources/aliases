@@ -39,6 +39,14 @@ alias yrwp="yarn watch-poll"
 alias yrh="yarn hot"
 alias yrp="yarn production"
 
+# 导出结构
+mysqldump_structure() {
+    mysqldump --no-create-db --no-data --events --routines --compact "$@" \
+    | sed -e 's/^\/\*![0-9]\{5\}.*\*\/;$//g' \
+          -e 's/ AUTO_INCREMENT=[0-9]*//g' \
+    | tr --squeeze-repeats '\n' | sed -e '/^CREATE TABLE/i\\'
+}
+
 function artisan() {
     php artisan "$@"
 }
