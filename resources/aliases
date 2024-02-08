@@ -1,9 +1,23 @@
+#! /usr/bin/env bash
+
 alias ..="cd .."
 alias ...="cd ../.."
 
 alias h='cd ~'
 alias c='clear'
-alias art=artisan
+alias art='php artisan'
+
+# Git
+g() {
+    case $1 in
+      '') git status ;;
+      a) git add "${@:2}" ;;
+      b) git checkout "${@:2}" ;;
+      c) git commit "${@:2}" ;;
+      l) git log "${@:2}" ;;
+      *) git "$@" ;;
+    esac
+}
 
 alias codecept='vendor/bin/codecept'
 alias phpspec='vendor/bin/phpspec'
