@@ -10,27 +10,36 @@ keys:
   - ~/.ssh/id_rsa
 
 folders:
-  - map: ~/code
-    to: /home/vagrant/code
+  - map: ./share
+    to: /home/vagrant/share
+  - map: ~/src/project
+    to: /home/vagrant/src/project
 
 sites:
-  - map: homestead.test
-    to: /home/vagrant/code/public
+  - map: project.test
+    to: /home/vagrant/src/project/public
+    type: laravel
+    php: "8.2"
+  - map: admin.project.test
+    to: http://127.0.0.1:8848
+    type: proxy
 
 databases:
-  - homestead
+  - project
 
 features:
-  - mariadb: false
+  - python: false
+  - golang: false
+  - mariadb: true
   - postgresql: false
-  - ohmyzsh: false
-  - webdriver: false
+  - elasticsearch: false
+  - rabbitmq: false
 
-services:
-  - enabled:
-      - "mysql"
+# services:
+#   - enabled:
+#     - "mysql"
 #   - disabled:
-#       - "postgresql@11-main"
+#     - "postgresql@11-main"
 
 # ports:
 #   - send: 33060 # MySQL/MariaDB
