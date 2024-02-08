@@ -73,11 +73,12 @@ block="server {
         $paramsTXT
 
         fastcgi_intercept_errors off;
-        fastcgi_buffer_size 16k;
-        fastcgi_buffers 4 16k;
         fastcgi_connect_timeout 300;
         fastcgi_send_timeout 300;
-        fastcgi_read_timeout 300;
+
+        fastcgi_buffers 16 16k;
+        fastcgi_buffer_size 32k;
+        fastcgi_read_timeout 1h;
     }
 
     location ~ /\.ht {
