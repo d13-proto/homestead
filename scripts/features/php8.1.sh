@@ -44,11 +44,29 @@ sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/8.1/cli/php.ini
 sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/8.1/cli/php.ini
 
 # Configure Xdebug
-# echo "xdebug.mode = debug" >> /etc/php/8.1/mods-available/xdebug.ini
-# echo "xdebug.discover_client_host = true" >> /etc/php/8.1/mods-available/xdebug.ini
-# echo "xdebug.client_port = 9003" >> /etc/php/8.1/mods-available/xdebug.ini
-# echo "xdebug.max_nesting_level = 512" >> /etc/php/8.1/mods-available/xdebug.ini
-# echo "opcache.revalidate_freq = 0" >> /etc/php/8.1/mods-available/opcache.ini
+tee -a /etc/php/8.1/mods-available/xdebug.ini <<EOF
+
+xdebug.mode = debug,profile,coverage
+xdebug.start_with_request = trigger
+xdebug.discover_client_host = true
+xdebug.max_nesting_level = 512
+xdebug.output_dir = /home/$WSL_USER_NAME/.xdebug-output
+xdebug.profiler_output_name = %H_%u_%R.cachegrind.out
+EOF
+
+mkdir "/home/$WSL_USER_NAME/.xdebug-output"
+chown -Rf "$WSL_USER_NAME:$WSL_USER_GROUP" "/home/$WSL_USER_NAME/.xdebug-output"
+
+# Configure Opcache
+tee -a /etc/php/8.1/mods-available/opcache.ini <<EOF
+
+opcache.jit = on
+opcache.jit_buffer_size = 128m
+opcache.revalidate_freq = 0
+opcache.memory_consumption = 256
+opcache.interned_strings_buffer = 64
+opcache.max_accelerated_files = 80000
+EOF
 
 # Configure php.ini for FPM
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/8.1/fpm/php.ini

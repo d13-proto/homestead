@@ -42,11 +42,19 @@ sed -i "s/memory_limit = .*/memory_limit = 512M/" /etc/php/7.4/cli/php.ini
 sed -i "s/;date.timezone.*/date.timezone = UTC/" /etc/php/7.4/cli/php.ini
 
 # Configure Xdebug
-echo "xdebug.mode = debug" >> /etc/php/7.4/mods-available/xdebug.ini
-echo "xdebug.discover_client_host = true" >> /etc/php/7.4/mods-available/xdebug.ini
-echo "xdebug.client_port = 9003" >> /etc/php/7.4/mods-available/xdebug.ini
-echo "xdebug.max_nesting_level = 512" >> /etc/php/7.4/mods-available/xdebug.ini
+tee -a /etc/php/7.4/mods-available/xdebug.ini <<EOF
+
+xdebug.mode = debug,profile,coverage
+xdebug.start_with_request = trigger
+xdebug.discover_client_host = true
+xdebug.max_nesting_level = 512
+xdebug.output_dir = /home/$WSL_USER_NAME/.xdebug-output
+xdebug.profiler_output_name = %H_%u_%R.cachegrind.out
+EOF
 echo "opcache.revalidate_freq = 0" >> /etc/php/7.4/mods-available/opcache.ini
+
+mkdir "/home/$WSL_USER_NAME/.xdebug-output"
+chown -Rf "$WSL_USER_NAME:$WSL_USER_GROUP" "/home/$WSL_USER_NAME/.xdebug-output"
 
 # Configure php.ini for FPM
 sed -i "s/error_reporting = .*/error_reporting = E_ALL/" /etc/php/7.4/fpm/php.ini
