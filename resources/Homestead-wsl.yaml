@@ -1,0 +1,17 @@
+---
+
+features:
+  - mariadb: true
+  - php8.2: true
+
+wsl_sites:
+  - map: project.test
+    to: /home/vagrant/src/project/public
+    type: laravel
+    php: "8.2"
+  - map: admin.project.test
+    to: http://127.0.0.1:8848
+    type: proxy
+
+databases:
+  - project
