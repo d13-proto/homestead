@@ -62,7 +62,7 @@ class WslCreateSiteCommand extends Command
     public function execute(InputInterface $input, OutputInterface $output): int
     {
         // Remove any existing nginx sites
-        $shell_output = shell_exec('sudo rm -rf /etc/nginx/sites-available/*');
+        $shell_output = shell_exec('sudo rm -rf /etc/nginx/sites-available/* /etc/nginx/sites-enabled/*');
         if (! is_null($shell_output)) {
             var_dump($shell_output);
         }
