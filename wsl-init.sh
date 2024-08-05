@@ -74,9 +74,11 @@ sudo apt -y clean
 composer install
 
 cp -i ./resources/Homestead-wsl.yaml ./Homestead.yaml
+cp -i ./resources/after.sh ./after.sh
+cp -i ./resources/aliases ./aliases
 
 # Run after.sh
-bash ./resources/after.sh
+bash ./after.sh
 
 echo "Appending the following to $HOME/.bashrc"
 tee -a ~/.bashrc <<EOF
@@ -94,7 +96,7 @@ homestead() {
     popd
 }
 
-. \$HOMESTEAD_DIR/resources/aliases
+. \$HOMESTEAD_DIR/aliases
 EOF
 
 popd
