@@ -6,16 +6,19 @@ alias ...="cd ../.."
 alias h='cd ~'
 alias c='clear'
 alias art='php artisan'
+alias sys='sudo systemctl'
 
 # Git
 g() {
     case $1 in
-      '') git status ;;
-      a) git add "${@:2}" ;;
-      b) git checkout "${@:2}" ;;
-      c) git commit "${@:2}" ;;
-      l) git log "${@:2}" ;;
-      *) git "$@" ;;
+    '') git status ;;
+    s) git switch "${@:2}" ;;
+    a) git add "${@:2}" ;;
+    r) git restore --staged "${@:2}" ;;
+    c) git commit "${@:2}" ;;
+    b) git branch "${@:2}" ;;
+    l) git log "${@:2}" ;;
+    *) git "$@" ;;
     esac
 }
 
