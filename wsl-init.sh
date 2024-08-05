@@ -83,9 +83,6 @@ bash ./after.sh
 echo "Appending the following to $HOME/.bashrc"
 tee -a ~/.bashrc <<EOF
 
-# Composer Global Bin
-PATH="$(composer config -g home 2>/dev/null)/vendor/bin:\$PATH"
-
 HOMESTEAD_DIR=$HOMESTEAD_DIR
 
 homestead() {
@@ -95,6 +92,18 @@ homestead() {
 
     popd
 }
+
+append_path() {
+    case ":\$PATH:" in
+        *:"\$1":*) ;;
+        *) export PATH="\${PATH:+\$PATH:}\$1"
+    esac
+}
+
+append_path ~/.local/bin
+
+# Composer Global Bin
+append_path '$(composer config -g home 2>/dev/null)/vendor/bin'
 
 . \$HOMESTEAD_DIR/aliases
 EOF
