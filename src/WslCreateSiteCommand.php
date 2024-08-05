@@ -119,7 +119,7 @@ class WslCreateSiteCommand extends Command
             }
 
             // Restart nginx
-            $shell_output = shell_exec('sudo service nginx restart');
+            $shell_output = shell_exec('sudo nginx -s reload');
             if (! is_null($shell_output)) {
                 var_dump($shell_output);
             }
