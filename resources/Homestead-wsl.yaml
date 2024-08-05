@@ -9,6 +9,9 @@ wsl_sites:
     to: /home/vagrant/src/project/public
     type: laravel
     php: "8.2"
+  - map: web.project.test
+    to: http://127.0.0.1:5173
+    type: proxy
   - map: admin.project.test
     to: http://127.0.0.1:8848
     type: proxy
